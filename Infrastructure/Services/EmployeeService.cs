@@ -35,7 +35,7 @@ public class EmployeeService(DataContext context) : IEmployeeService
         }
         catch (Exception e)
         {
-            return new Response<Employee>(HttpStatusCode.InternalServerError, e.Message);
+            return new Response<Employee>(HttpStatusCode.InternalServerError, "Unexpected error");
         }
     }
 
@@ -65,7 +65,7 @@ public class EmployeeService(DataContext context) : IEmployeeService
         }
         catch (Exception e)
         {
-            return new Response<Employee>(HttpStatusCode.InternalServerError, e.Message);
+            return new Response<Employee>(HttpStatusCode.InternalServerError, "Unexpected error");
         }
     }
 
@@ -91,7 +91,7 @@ public class EmployeeService(DataContext context) : IEmployeeService
         }
         catch (Exception e)
         {
-            return new Response<string>(HttpStatusCode.InternalServerError, e.Message);
+            return new Response<string>(HttpStatusCode.InternalServerError, "Unexpected error");
         }
     }
 
@@ -106,6 +106,11 @@ public class EmployeeService(DataContext context) : IEmployeeService
             
             else employees = await context.Employees.ToListAsync();
 
+            foreach (var employee in employees)
+            {
+                employee.Shifts = await context.Shifts.Where(s => s.EmployeeId == employee.Id).ToListAsync();
+            }
+
             if (!employees.Any())
             {
                 return new Response<List<Employee>>(HttpStatusCode.NotFound, "Not found any employee");
@@ -115,7 +120,7 @@ public class EmployeeService(DataContext context) : IEmployeeService
         }
         catch (Exception e)
         {
-            return new Response<List<Employee>>(HttpStatusCode.InternalServerError, e.Message);
+            return new Response<List<Employee>>(HttpStatusCode.InternalServerError, "Unexpected error");
         }
     }
 }

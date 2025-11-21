@@ -32,7 +32,7 @@ public class EmployeeController(IEmployeeService employeeService) : ControllerBa
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAllEmployees([FromQuery] JobPosition? position)
+    public async Task<ActionResult<List<GetEmployeeDto>>> GetAllEmployees([FromQuery] JobPosition? position)
     {
         var result= await employeeService.GetAllEmployeesAsync(position);
         return StatusCode(result.StatusCode, result);
